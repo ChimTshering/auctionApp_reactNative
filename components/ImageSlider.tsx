@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { ScrollView, View, StyleSheet, Image, Text, Pressable } from "react-native";
+import { ScrollView, View, StyleSheet, Image, Text, Pressable, Platform } from "react-native";
 import { Color } from "../constent/color";
 
 import { MaterialCommunityIcons } from "@expo/vector-icons";
@@ -64,7 +64,8 @@ const onDeletePress=(uri:string)=>{
 const style = StyleSheet.create({
   root: {
     width: "95%",
-    maxHeight: 400,
+    maxHeight: Platform.OS === "web" ? '100%' : 400,
+    minHeight:Platform.OS==='web'? 500:180,
     backgroundColor: "#fff",
     borderRadius: 8,
     overflow: "scroll",
@@ -82,8 +83,8 @@ const style = StyleSheet.create({
   imgContainer: {
     flex: 1,
     flexDirection: "row",
-    height: 380,
-    width: 290,
+    height: Platform.OS === "web" ? 600 : 380,
+    width: Platform.OS === "web" ? 600 : 290,
     alignItems: "center",
     paddingHorizontal: 12,
   },
@@ -93,10 +94,10 @@ const style = StyleSheet.create({
     fontWeight: "bold",
     color: Color.Gray500,
   },
-  delete:{
-    position:'absolute',
-    zIndex:2,
-    top:24,
-    right:20
-  }
+  delete: {
+    position: "absolute",
+    zIndex: 2,
+    top: 24,
+    right: 20,
+  },
 });

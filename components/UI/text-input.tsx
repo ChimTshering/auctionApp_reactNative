@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { Text, View, TextInput,StyleSheet, Pressable, KeyboardTypeOptions, TextInputProps } from "react-native"
+import { Text, View, TextInput,StyleSheet, Pressable, KeyboardTypeOptions, TextInputProps, TextInputChangeEventData, NativeSyntheticEvent } from "react-native"
 import { Color } from "../../constent/color";
 
 import { Ionicons } from '@expo/vector-icons'; 
@@ -19,9 +19,10 @@ export const InputText = ({label,textChange,isPasswrd,value,keyType, placeholder
   const [isActive, setIsActive]=useState(false)
   const [isPasswd, setIsPasswrd] = useState(true)
 
- const inputHandler = (val:string)=>{
-  textChange(val)
- } 
+ const inputHandler = (val:string) => {
+   textChange(val);
+   
+ }; 
   return (
     <View style={style.outerContainer}>
       <Text style={style.LabelText}>{label}</Text>

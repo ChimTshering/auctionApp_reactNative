@@ -5,7 +5,7 @@ import {
   View,
   StyleSheet,
   Image,
-  Button,
+  Button,Platform
 } from "react-native";
 import { Color, GlobalStyle } from "../constent/color";
 import * as ImagePicker from 'expo-image-picker'
@@ -40,7 +40,7 @@ export const AuctionForm = () => {
           <Text style={style.title}>Add Auction Detail</Text>
           <HorizontalLine />
         </View>
-        <ScrollView>
+        <ScrollView >
           <SafeAreaView>
             <InputText label="Item Name" textChange={() => {}} value="" />
             <InputText label="Location" textChange={() => {}} value="" />
@@ -79,6 +79,7 @@ const style = StyleSheet.create({
   root: {
     justifyContent: "center",
     alignItems: "center",
+    height:undefined
   },
   scroll: {
     backgroundColor: Color.Black500,

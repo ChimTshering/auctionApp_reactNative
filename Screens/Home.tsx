@@ -1,15 +1,14 @@
 import { View, Text,StyleSheet, Image } from "react-native";
+import { useSelector } from "react-redux";
+import { RootState } from "../AppStore/store";
 import { GlobalStyle, Color } from "../constent/color";
-export const Home = () => {
+export const Home = ({navigation}:any) => {
+const user = useSelector((state:RootState)=>state.Auth.user)
+console.log(user)
   return (
     <View style={GlobalStyle.RootScreenContainer}>
       <Text style={{ color: Color.White500 }}>Home</Text>
-      <Image
-        source={{
-          uri: "file:///data/user/0/host.exp.exponent/cache/ExperienceData/%2540anonymous%252FAuctionApp-769979d0-c592-4e0d-b093-8495b40b4731/ImagePicker/481f6d74-b036-4e99-9a04-3a33be13be1d.jpeg",
-        }}
-        style={Styles.img}
-      />
+      
     </View>
   );
 };

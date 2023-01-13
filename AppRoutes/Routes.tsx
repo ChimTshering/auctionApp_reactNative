@@ -13,6 +13,8 @@ import { SignIn } from '../Screens/signIn';
 import { RightButton } from '../components/RightButton';
 import { SignUp } from '../Screens/SignUp';
 import { AuctionForm } from '../Screens/create-auction-form';
+import { useSelector } from "react-redux";
+import { RootState } from "../AppStore/store";
 
 NavigationBar.setBackgroundColorAsync("#222831");
 
@@ -24,7 +26,7 @@ export default function Routes(){
   return (
     <NavigationContainer>
       <Stacks.Navigator
-        initialRouteName="Listing"
+        initialRouteName="CreateAuction"
         screenOptions={{
           headerStyle: { backgroundColor: Color.Black500 },
           headerTitleStyle: {
@@ -34,7 +36,6 @@ export default function Routes(){
           },
           headerTitleAlign: "center",
           headerBackButtonMenuEnabled: false,
-          
         }}
       >
         <Stacks.Screen
@@ -55,7 +56,7 @@ export default function Routes(){
         <Stacks.Screen
           name="CreateAuction"
           component={AuctionForm}
-          options={{ title:'Create your Auction', headerTintColor:'white' }}
+          options={{ title: "Create your Auction", headerTintColor: "white" }}
         />
       </Stacks.Navigator>
     </NavigationContainer>
@@ -64,7 +65,7 @@ export default function Routes(){
 }
 
 const  Listing = () => {
-  const isLoggedIn = true;
+  // const isLoggedIn = useSelector((state:RootState)=>state.Auth.user_id)
 
   return (
     <Tabs.Navigator
@@ -87,9 +88,9 @@ const  Listing = () => {
         tabBarInactiveTintColor: "white",
         headerRight: () => (
           <RightButton
-            BtnLabel={isLoggedIn ? "Create" : "Log In"}
+            BtnLabel={"Create"}
             onPress={() =>
-              navigation.navigate(isLoggedIn ? "CreateAuction" : "SignIn")
+              navigation.navigate("CreateAuction")
             }
           />
         ),

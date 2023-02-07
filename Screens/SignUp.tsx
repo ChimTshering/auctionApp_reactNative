@@ -10,15 +10,15 @@ import {
   SafeAreaView,
 } from "react-native";
 import { useDispatch } from "react-redux";
-import {signUp } from "../AppStore/Reducers/auth";
+import { createUser, userBio } from "../AppStore/Reducers/userSlice";
 import { AppDispatch } from "../AppStore/store";
 import { InputError } from "../components/UI/inputError";
 import { InputText } from "../components/UI/text-input";
 import { Color, GlobalStyle } from "../constent/color";
-import { auth } from "../firebaseConfig";
 
 export const SignUp = ({ navigation }: any) => {
   const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
   const [passwrd, setPasswrd] = useState("");
   const [cnfPasswrd, setCnfPasswrd] = useState("");
@@ -27,14 +27,18 @@ export const SignUp = ({ navigation }: any) => {
 
   const emailRegix = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 
-  const createUser = async () => {
+  const signUp = async () => {
     if (
       emailRegix.test(email) !== false &&
       passwrd.length &&
       passwrd === cnfPasswrd
       ) {
-        const usr = await dispatch(signUp({ email, password: passwrd }));
-      navigation.navigate("Home");
+await dispatch(
+  createUser({ email, password: passwrd }) 
+);
+await dispatch(
+   userBio({ name, email, phone })
+);  
     } else {
       setHasErr(true);
     }
@@ -50,16 +54,18 @@ export const SignUp = ({ navigation }: any) => {
             <View style={styles.outer}>
               <Text style={styles.title}>Sign In</Text>
             </View>
+            <InputText label="User Name" value={name} textChange={setName} />
             <InputText
-              label="User Name"
-              value={name}
-              textChange={setName}
+              label="Phone Number"
+              value={phone}
+              textChange={setPhone}
+              keyType="phone-pad"
             />
             <InputText
               label="Email address"
               value={email}
               textChange={setEmail}
-              keyType='email-address'
+              keyType="email-address"
             />
             <InputText
               label="Password"
@@ -80,7 +86,7 @@ export const SignUp = ({ navigation }: any) => {
               <Button
                 title="Sign Up"
                 color={Color.Aqua500}
-                onPress={createUser}
+                onPress={signUp}
               />
             </View>
             <View style={[styles.outer, styles.textContainer]}>

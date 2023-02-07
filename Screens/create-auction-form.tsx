@@ -5,34 +5,65 @@ import {
   View,
   StyleSheet,
   Image,
-  Button,Platform
+  Button,
+  Platform,
 } from "react-native";
 import { Color, GlobalStyle } from "../constent/color";
-import * as ImagePicker from 'expo-image-picker'
+import * as ImagePicker from "expo-image-picker";
 
 import { HorizontalLine } from "../components/UI/HRLine";
 import { InputText } from "../components/UI/text-input";
 import { ImageSlider } from "../components/ImageSlider";
 import { useCallback, useState } from "react";
 import { MediaTypeOptions } from "expo-image-picker";
+import { current } from "@reduxjs/toolkit";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "../AppStore/store";
+import {v4} from 'uuid'
 
-export const AuctionForm = () => {
-  const [value, setValue] = useState("");
-  const [imageUri, setImage] = useState<string []>([]);
+export const AuctionForm = ({navigation}:any) => {
+  const auction_id = v4()
+  const [value, setValue] = useState({
+    item_name: "",
+    item_location: "",
+    min_price: "",
+    due_time: "",
+    description: "",
+  });
+  const [imageUri, setImage] = useState<string[]>([]);
+  const [imageBase64, setImageBase64] = useState<(string | null | undefined)[]>(
+    []
+  );
+  const dispatch = useDispatch<AppDispatch>();
+
   const addImage = useCallback(async () => {
     const res = await ImagePicker.launchImageLibraryAsync({
       allowsEditing: true,
       quality: 1,
       mediaTypes: MediaTypeOptions.Images,
-      base64:true
+      base64: true,
+      allowsMultipleSelection:false,
+      aspect:[5,7]
     });
-    console.log(res)
-    if(!res.canceled){
+    if (!res.canceled) {
+      setImage((current) => [res.assets[0].uri, ...current]);
+      setImageBase64((current)=>[res.assets[0].base64,...current])
       console.log(res)
-      setImage((current)=>[res.assets[0].uri,...current])
     }
   }, [imageUri]);
-  console.log(imageUri);
+  const CreateAuction = () => {
+    const payload = {
+      ...value,
+      images: imageUri,
+      user_name: "chimi",
+      email: "chimi@gmail.com",
+    };
+    if (payload) {
+      // dispatch(createAuction(payload));
+      navigation.navigate("Listing")
+    }
+  };
+  console.log(imageBase64)
   return (
     <View style={[GlobalStyle.RootScreenContainer, style.root]}>
       <View style={style.scroll}>
@@ -40,11 +71,27 @@ export const AuctionForm = () => {
           <Text style={style.title}>Add Auction Detail</Text>
           <HorizontalLine />
         </View>
-        <ScrollView >
+        <ScrollView>
           <SafeAreaView>
-            <InputText label="Item Name" textChange={() => {}} value="" />
-            <InputText label="Location" textChange={() => {}} value="" />
-            <ImageSlider  imgUri={imageUri} setImgUri={setImage}/>
+            <InputText
+              label="Item Name"
+              textChange={(text) =>
+                setValue((current) => {
+                  return { ...current, item_name: text };
+                })
+              }
+              value={value.item_name}
+            />
+            <InputText
+              label="Location"
+              textChange={(text) =>
+                setValue((current) => {
+                  return { ...current, item_location: text };
+                })
+              }
+              value={value.item_location}
+            />
+            <ImageSlider imgUri={imageUri} setImgUri={setImage} rootStyle={{borderRadius:8}} editingMode/>
             <View style={style.addBtn}>
               <Button
                 title="Add Image(s)"
@@ -54,19 +101,43 @@ export const AuctionForm = () => {
             </View>
             <InputText
               label="Minimum Price($)"
-              textChange={() => {}}
-              value=""
+              textChange={(text) =>
+                setValue((current) => {
+                  return { ...current, min_price: text };
+                })
+              }
+              value={value.min_price}
               keyType="numeric"
+              placeholder="%00.00"
+            />
+            <InputText
+              label="Due Time(hrs)"
+              textChange={(text) =>
+                setValue((current) => {
+                  return { ...current, due_time: text };
+                })
+              }
+              value={value.due_time}
+              keyType="numeric"
+              placeholder="Due time in hour(s)"
             />
             <InputText
               label="Description"
-              textChange={(text) => setValue(text)}
-              value={value}
+              textChange={(text) =>
+                setValue((current) => {
+                  return { ...current, description: text };
+                })
+              }
+              value={value.description}
               textAlign="top"
               multiline
             />
             <View style={style.createBtn}>
-              <Button title="Create Auction" color={Color.Aqua500} />
+              <Button
+                title="Create Auction"
+                color={Color.Aqua500}
+                onPress={CreateAuction}
+              />
             </View>
           </SafeAreaView>
         </ScrollView>
@@ -79,7 +150,7 @@ const style = StyleSheet.create({
   root: {
     justifyContent: "center",
     alignItems: "center",
-    height:undefined
+    height: undefined,
   },
   scroll: {
     backgroundColor: Color.Black500,
@@ -106,7 +177,6 @@ const style = StyleSheet.create({
     borderRadius: 6,
     overflow: "hidden",
     marginBottom: 32,
-    marginTop:12
+    marginTop: 12,
   },
-
 });

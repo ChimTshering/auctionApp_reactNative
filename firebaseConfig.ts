@@ -1,12 +1,9 @@
-// Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
+// Import the functions you need from the SDKs you need
 import { getAuth } from "firebase/auth";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+import {getFirestore,collection} from 'firebase/firestore'
+import {getStorage} from 'firebase/storage'
 
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
   apiKey: "AIzaSyCY80cYByjwBij4k3Jd2pegXqnedTSjWDc",
   authDomain: "auctionrn-b0024.firebaseapp.com",
@@ -19,7 +16,8 @@ const firebaseConfig = {
   measurementId: "G-F8KDGKYC71",
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const auth = getAuth()
-export {app, auth}
+const auth = getAuth();
+const fireStore = getFirestore(app)
+const storage = getStorage(app)
+export { app, auth,fireStore, storage };

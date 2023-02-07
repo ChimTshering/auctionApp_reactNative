@@ -1,14 +1,32 @@
-import { View, Text,StyleSheet, Image } from "react-native";
-import { useSelector } from "react-redux";
-import { RootState } from "../AppStore/store";
+import { useEffect } from "react";
+import { View, Text,StyleSheet, Image, ScrollView } from "react-native";
+import { useDispatch, useSelector } from "react-redux";
+import { getUser } from "../AppStore/Reducers/userSlice";
+import { AppDispatch, RootState } from "../AppStore/store";
+import { AuctionItem } from "../components/auction-item";
 import { GlobalStyle, Color } from "../constent/color";
 export const Home = ({navigation}:any) => {
-const user = useSelector((state:RootState)=>state.Auth.user)
-console.log(user)
+  const dispatch=useDispatch<AppDispatch>()
+
+  useEffect(()=>{
+    dispatch(getUser({email:"user2@gmail.com"}));
+  },[])
   return (
     <View style={GlobalStyle.RootScreenContainer}>
-      <Text style={{ color: Color.White500 }}>Home</Text>
-      
+      <ScrollView showsVerticalScrollIndicator = {false}>
+        <View style={{ marginVertical: 14 }}>
+          <AuctionItem />
+        </View>
+        <View style={{ marginVertical: 14 }}>
+          <AuctionItem />
+        </View>
+        <View style={{ marginVertical: 14 }}>
+          <AuctionItem />
+        </View>
+        <View style={{ marginVertical: 14 }}>
+          <AuctionItem />
+        </View>
+      </ScrollView>
     </View>
   );
 };

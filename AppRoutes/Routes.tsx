@@ -15,6 +15,7 @@ import { SignUp } from '../Screens/SignUp';
 import { AuctionForm } from '../Screens/create-auction-form';
 import { useSelector } from "react-redux";
 import { RootState } from "../AppStore/store";
+import { ItemDetail } from "../Screens/item-detail";
 
 NavigationBar.setBackgroundColorAsync("#222831");
 
@@ -26,7 +27,7 @@ export default function Routes(){
   return (
     <NavigationContainer>
       <Stacks.Navigator
-        initialRouteName="CreateAuction"
+        initialRouteName="Listing"
         screenOptions={{
           headerStyle: { backgroundColor: Color.Black500 },
           headerTitleStyle: {
@@ -58,6 +59,11 @@ export default function Routes(){
           component={AuctionForm}
           options={{ title: "Create your Auction", headerTintColor: "white" }}
         />
+        <Stacks.Screen
+          name="ItemDetail"
+          component={ItemDetail}
+          options={{ title: "Create your Auction", headerTintColor: "white" }}
+        />
       </Stacks.Navigator>
     </NavigationContainer>
   );
@@ -65,7 +71,7 @@ export default function Routes(){
 }
 
 const  Listing = () => {
-  // const isLoggedIn = useSelector((state:RootState)=>state.Auth.user_id)
+  const token = useSelector((state:RootState)=>state.User.token)
 
   return (
     <Tabs.Navigator
@@ -84,13 +90,12 @@ const  Listing = () => {
           fontWeight: "bold",
         },
         headerTitleAlign: "center",
-        // tabBarLabelStyle: { fontSize: 12 },
         tabBarInactiveTintColor: "white",
         headerRight: () => (
           <RightButton
-            BtnLabel={"Create"}
+            BtnLabel={token?.length?'Add Auction': "Log In"}
             onPress={() =>
-              navigation.navigate("CreateAuction")
+              navigation.navigate(token?.length?"CreateAuction":"SignIn")
             }
           />
         ),
@@ -113,22 +118,6 @@ const  Listing = () => {
         }}
       />
       <Tabs.Screen
-        name="ActiveAuction"
-        component={WinnerList}
-        options={{
-          tabBarIcon: ({ focused, color, size }) => (
-            <MaterialCommunityIcons
-              name={focused ? "calendar-clock" : "calendar-clock-outline"}
-              color={color}
-              size={size}
-            />
-          ),
-          tabBarLabel: "Active",
-          headerTitleAlign: "center",
-          headerTitle: "All Active Auction",
-        }}
-      />
-      <Tabs.Screen
         name="Winner"
         component={WinnerList}
         options={{
@@ -144,7 +133,7 @@ const  Listing = () => {
           headerTitle: "All Auction Items and Owner",
         }}
       />
-      <Tabs.Screen
+      {token?.length? <Tabs.Screen
         name="YourCreation"
         component={WinnerList}
         options={{
@@ -159,7 +148,7 @@ const  Listing = () => {
           headerTitleAlign: "center",
           headerTitle: "All Your Auction Item List",
         }}
-      />
+      />:null}
     </Tabs.Navigator>
   );
 }

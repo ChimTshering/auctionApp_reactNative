@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { View, StyleSheet, Button, Text, Pressable } from "react-native";
 import { useDispatch } from "react-redux";
-import { signUserIn } from "../AppStore/Reducers/auth";
+import { signIn } from "../AppStore/Reducers/userSlice";
+// import { signUserIn } from "../AppStore/Reducers/auth";
 import { AppDispatch } from "../AppStore/store";
 import { InputError } from "../components/UI/inputError";
 import { InputText } from "../components/UI/text-input";
@@ -13,9 +14,11 @@ export const SignIn = ({ navigation }: any) => {
   const [hasErr, setHseErr]=useState(false)
 const dispatch = useDispatch<AppDispatch>()
 
-const signIn= async()=>{
-  await dispatch(signUserIn({email,password:passwrd}))
-  navigation.navigate('Home')
+const signUsr= async()=>{
+ const res =  await dispatch(signIn({email,password:passwrd}))
+ if(res.meta.requestStatus==='fulfilled'){
+   navigation.navigate('Home')
+ }
 }
 
   return (
@@ -31,10 +34,12 @@ const signIn= async()=>{
           textChange={setPasswrd}
           isPasswrd
         />
-        {hasErr?<InputError errMessage="Wrong Cridentials. Please re-check." />:null}
+        {hasErr ? (
+          <InputError errMessage="Wrong Cridentials. Please re-check." />
+        ) : null}
 
         <View style={styles.submitBtn}>
-          <Button title="Sign In" color={Color.Aqua500} onPress={signIn} />
+          <Button title="Sign In" color={Color.Aqua500} onPress={signUsr} />
         </View>
         <View style={[styles.outer, styles.textContainer]}>
           <Text style={styles.buttomText}>

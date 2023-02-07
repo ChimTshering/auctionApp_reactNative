@@ -6,16 +6,18 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 type ImgProps = {
   imgUri: string[];
-  setImgUri: (imgUri: string[]) => void;
+  setImgUri?: (imgUri: string[]) => void;
+  rootStyle?:{},
+  editingMode?:boolean
 };
 
-export const ImageSlider = ({ imgUri, setImgUri }: ImgProps) => {
+export const ImageSlider = ({ imgUri, setImgUri ,rootStyle, editingMode}: ImgProps) => {
 const onDeletePress=(uri:string)=>{
   const filterUri = imgUri.filter(url =>url!==uri)
-  setImgUri(filterUri)
+   setImgUri && setImgUri(filterUri);
 }
   return (
-    <View style={style.root}>
+    <View style={[rootStyle,style.root]}>
       <ScrollView
         showsHorizontalScrollIndicator
         horizontal
@@ -25,14 +27,14 @@ const onDeletePress=(uri:string)=>{
       >
         {imgUri.length > 0 ? (
           imgUri.map((imgUri) => (
-            <View style={style.imgContainer}>
-              <Pressable style={({pressed})=>[style.delete, pressed&&{opacity:0.5}]} onPress= {()=>onDeletePress(imgUri)}>
+            <View style={style.imgContainer} key={imgUri}>
+              {editingMode?<Pressable style={({pressed})=>[style.delete, pressed&&{opacity:0.5}]} onPress= {()=>onDeletePress(imgUri)}>
                 <MaterialCommunityIcons
                   name="delete-forever"
                   size={32}
                   color={Color.red700}
                 />
-              </Pressable>
+              </Pressable>: null}
               <View
                 style={{
                   height: "100%",
@@ -65,9 +67,8 @@ const style = StyleSheet.create({
   root: {
     width: "95%",
     maxHeight: Platform.OS === "web" ? '100%' : 400,
-    minHeight:Platform.OS==='web'? 500:180,
+    minHeight:Platform.OS==='web'? 500:80,
     backgroundColor: "#fff",
-    borderRadius: 8,
     overflow: "scroll",
     marginHorizontal: 8,
     marginVertical: 6,
